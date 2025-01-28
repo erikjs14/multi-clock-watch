@@ -116,7 +116,7 @@
         };
     </script>
 
-    <title>Multi Clock Display</title>
+    <title>Clock²</title>
 
     <style>
         * {
@@ -129,6 +129,15 @@
             min-height: 100vh;
             display: grid;
             place-items: center;
+            overflow-x: hidden;
+            font-family: Georgia, serif;
+        }
+        h1 {
+            display: none; /* headline would only distract */
+            width: 100vw;
+            text-align: center;
+            place-self: start;
+            padding: 1rem 0;
         }
         #cvs {
             /* border: 1px solid black; */
@@ -150,11 +159,16 @@
     </style>
 </head>
 <body>
+    <h1>Analog-Digital-Clock</h1>
     <div id="cvs-wrapper">
         <canvas id="cvs"></canvas>
     </div>
 
     <script>
+
+        if (Math.random() > 0.5) {
+            document.getElementsByTagName('title')[0].innerText = 'Digital-Analog-Clock'
+        }
 
         const customByPosition = (normal, ifSecondsLeft, ifSecondsRight) => (i, j) => i > 5 && j > 3 ? ifSecondsRight : i > 5 && j < 4 ? ifSecondsLeft : normal;
 
