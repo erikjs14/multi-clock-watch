@@ -185,10 +185,14 @@
         const NO_MIN_TIME = customByPosition(false, false, true);
         const THRESH = customByPosition(5/180 * Math.PI, 5/180 * Math.PI, 10/180 * Math.PI); // threshold in radians
 
+        const INIT_RANDOM = 111;
+        const INIT_OFF = 222;
+        const INIT_ACCURATE = 333;
+        const INIT_MODE = INIT_RANDOM;
+
         const MODE_RANDOM = 111;
         const MODE_SHORTEST = 222;
         const MODE_SHORTEST_SAME_DIR = 333;
-
         const CHANGE_MODE = (i, j) => i > 5 && j > 3 ? MODE_SHORTEST_SAME_DIR : MODE_RANDOM;
         // END CONSTANTS
 
@@ -231,9 +235,22 @@
             for (let i = 0; i < ROWS; i++) {
                 const row = [];
                 for (let j = 0; j < COLS; j++) {
-                    // set clock to random initial state
-                    const handSmall = Math.random() * 2 * Math.PI;
-                    const handBig = Math.random() * 2 * Math.PI;
+
+                    // init initial state based on mode
+                    let handSmall, handBig;
+                    switch (INIT_MODE) {
+                        case INIT_RANDOM:
+                            handSmall = Math.random() * 2 * Math.PI;
+                            handBig = Math.random() * 2 * Math.PI;
+                            break;
+                        case INIT_ACCURATE: // will be handled after initialization
+                        case INIT_OFF:
+                        default:
+                            handSmall = off.hs;
+                            handBig = off.hb;
+                            break;
+                    }
+
                     const clock = {
                         x: i,
                         y: j,
@@ -253,6 +270,18 @@
                     row.push(clock);
                 }
                 clocks.push(row);
+            }
+            if (INIT_MODE === INIT_ACCURATE) {
+                goalClocks();
+                for (let i = 0; i < ROWS; i++) {
+                    for (let j = 0; j < COLS; j++) {
+                        const clock = clocks[i][j];
+                        clock.handSmall = clock.handSmallGoal;
+                        clock.handBig = clock.handBigGoal;
+                        clock.handSmallDir = 0;
+                        clock.handBigDir = 0;
+                    }
+                }
             }
         }
 
