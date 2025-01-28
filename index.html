@@ -24,7 +24,7 @@
         const brc   = to_rad(0, 225); // bottom right crooked
         const blc   = to_rad(0, 135); // bottom left crooked
 
-        let TEMPLATES = {
+        const TEMPLATES = {
             0: [
                 [tl, horiz, horiz, tr],
                 [vert, tl, tr, vert],
@@ -139,17 +139,6 @@
                 -2px -2px 3px 3px rgba(255, 255, 255, 0.3),
                 2px 2px 3px 3px rgba(0,0,0,0.05);
         }
-        .test {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            --w: 69px;
-            width: var(--w);
-            height: var(--w);
-            border-radius: 50%;
-            border: 1px solid white;
-            box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body>
@@ -159,7 +148,7 @@
 
     <script>
 
-        // CONSTANS
+        // CONSTANTS
         const PADDING = 20;
         const ROWS = 12;
         const COLS = 8;
@@ -170,7 +159,7 @@
         const SPEED_BOOST = (i, j) => i > 5 && j > 3 ? 5 : 1;
         const MIN_CHANGE_TIME = 100; // millisec time for random movement when changing before stopping in correct place
         const NO_MIN_TIME = (i, j) => i > 5 && j > 3;
-        const THRESH = 5/180 * Math.PI; // threshold in radians
+        const THRESH = (i, j) => i > 5 && j > 3 ? 10/180 * Math.PI : 5/180 * Math.PI; // threshold in radians
 
         const MODE_RANDOM = 111;
         const MODE_SHORTEST = 222;
@@ -236,8 +225,8 @@
             }
         }
 
-        function inThresh(ref, check) {
-            return Math.abs(ref - check) % (2*Math.PI) <= THRESH;
+        function inThresh(i, j, ref, check) {
+            return Math.abs(ref - check) % (2*Math.PI) <= THRESH(i, j);
         }
 
         function clockwiseDist(from, to) {
@@ -461,7 +450,7 @@
                         // check for small hand
                         if (
                             !(clock.minChangeTime > 0 && clock.digitChanged)
-                            && inThresh(clock.handSmall, clock.handSmallGoal)
+                            && inThresh(i, j, clock.handSmall, clock.handSmallGoal)
                         ) {
                             clock.handSmall = clock.handSmallGoal;
                             clock.handSmallDir = 0;
@@ -473,7 +462,7 @@
                         // check for big hand
                         if (
                             !(clock.minChangeTime > 0 && clock.digitChanged)
-                            && inThresh(clock.handBig, clock.handBigGoal)
+                            && inThresh(i, j, clock.handBig, clock.handBigGoal)
                         ) {
                             clock.handBig = clock.handBigGoal;
                             clock.handBigDir = 0;
