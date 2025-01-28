@@ -206,9 +206,9 @@
         cvs.setAttribute('width', W + 2 * PADDING);
 
         // if overflowing width, scale down
-        if (W > window.innerWidth) {
+        if (W + 2 * PADDING > window.visualViewport.width) {
             wrapper.style.setProperty('transform-origin', 'left');
-            wrapper.style.setProperty('transform', `scale(${window.innerWidth / (W + 2 * PADDING)})`)
+            wrapper.style.setProperty('transform', `scale(${window.visualViewport.width / (W + 2 * PADDING)})`)
         }
         
         // get dimensions
