@@ -104,6 +104,14 @@
                 [bl, horiz, tr, vert],
                 [tl, horiz, br, vert],
                 [bl, horiz, horiz, br],
+            ],
+            'idle': [
+                [off, off, off, off],
+                [off, off, off, off],
+                [off, off, off, off],
+                [off, off, off, off],
+                [off, off, off, off],
+                [off, off, off, off],
             ]
         };
     </script>
@@ -148,18 +156,20 @@
 
     <script>
 
+        const customByPosition = (normal, ifSecondsLeft, ifSecondsRight) => (i, j) => i > 5 && j > 3 ? ifSecondsRight : i > 5 && j < 4 ? ifSecondsLeft : normal;
+
         // CONSTANTS
         const PADDING = 20;
         const ROWS = 12;
-        const COLS = 8;
+        const COLS = 16;
         const FRAC = .95; // fraction of available space to use for clock;
         const BIG_FRAC = .9;
         const SMALL_FRAC = .75;
         const SPEED = Math.PI * .4; // speed of hands in radians per second
-        const SPEED_BOOST = (i, j) => i > 5 && j > 3 ? 5 : 1;
+        const SPEED_BOOST = customByPosition(1, 2.5, 5);
         const MIN_CHANGE_TIME = 100; // millisec time for random movement when changing before stopping in correct place
-        const NO_MIN_TIME = (i, j) => i > 5 && j > 3;
-        const THRESH = (i, j) => i > 5 && j > 3 ? 10/180 * Math.PI : 5/180 * Math.PI; // threshold in radians
+        const NO_MIN_TIME = customByPosition(false, false, true);
+        const THRESH = customByPosition(5/180 * Math.PI, 5/180 * Math.PI, 10/180 * Math.PI); // threshold in radians
 
         const MODE_RANDOM = 111;
         const MODE_SHORTEST = 222;
@@ -171,7 +181,7 @@
 
         const cvs = document.getElementById('cvs');
         const H = window.innerHeight * .9 - 2 * PADDING;
-        const W = H * .7 - 2 * PADDING;
+        const W = H * 1.4 - 2 * PADDING;
         cvs.setAttribute('height', H + 2 * PADDING);
         cvs.setAttribute('width', W + 2 * PADDING);
         
@@ -391,10 +401,15 @@
 
         function goalClocks() {
             const time = new Date();
-            const pos1 = Math.floor(time.getMinutes() / 10);
-            const pos2 = time.getMinutes() % 10;
-            const pos3 = Math.floor(time.getSeconds() / 10);
-            const pos4 = time.getSeconds() % 10;
+
+            const pos00 = Math.floor(time.getHours() / 10);
+            const pos01 = time.getHours() % 10;
+            const pos02 = Math.floor(time.getMinutes() / 10);
+            const pos03 = time.getMinutes() % 10;
+            const pos10 = Math.floor(time.getSeconds() / 10);
+            const pos11 = time.getSeconds() % 10;
+            const pos12 = 'idle'
+            const pos13 = 'idle'
 
             const updateToTemplate = (clocks, template, digit) => {
                 for (let i = 0; i < clocks.length; i++) {
@@ -412,23 +427,43 @@
 
             updateToTemplate(
                 clocks.slice(0, 6).map(row => row.slice(0, 4)),
-                TEMPLATES[pos1],
-                pos1,
+                TEMPLATES[pos00],
+                pos00,
             );
             updateToTemplate(
                 clocks.slice(0, 6).map(row => row.slice(4, 8)),
-                TEMPLATES[pos2],
-                pos2,
+                TEMPLATES[pos01],
+                pos01,
+            );
+            updateToTemplate(
+                clocks.slice(0, 6).map(row => row.slice(8, 12)),
+                TEMPLATES[pos02],
+                pos02,
+            );
+            updateToTemplate(
+                clocks.slice(0, 6).map(row => row.slice(12, 16)),
+                TEMPLATES[pos03],
+                pos03,
             );
             updateToTemplate(
                 clocks.slice(6, 12).map(row => row.slice(0, 4)),
-                TEMPLATES[pos3],
-                pos3,
+                TEMPLATES[pos10],
+                pos10,
             );
             updateToTemplate(
                 clocks.slice(6, 12).map(row => row.slice(4, 8)),
-                TEMPLATES[pos4],
-                pos4,
+                TEMPLATES[pos11],
+                pos11,
+            );
+            updateToTemplate(
+                clocks.slice(6, 12).map(row => row.slice(8, 12)),
+                TEMPLATES[pos12],
+                pos12,
+            );
+            updateToTemplate(
+                clocks.slice(6, 12).map(row => row.slice(12, 16)),
+                TEMPLATES[pos13],
+                pos13,
             );
         }
 
