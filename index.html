@@ -179,11 +179,19 @@
         // END CONSTANTS
 
 
+        const wrapper = document.getElementById('cvs-wrapper');
         const cvs = document.getElementById('cvs');
+
         const H = window.innerHeight * .9 - 2 * PADDING;
         const W = H * 1.4 - 2 * PADDING;
         cvs.setAttribute('height', H + 2 * PADDING);
         cvs.setAttribute('width', W + 2 * PADDING);
+
+        // if overflowing width, scale down
+        if (W > window.innerWidth) {
+            wrapper.style.setProperty('transform-origin', 'left');
+            wrapper.style.setProperty('transform', `scale(${window.innerWidth / (W + 2 * PADDING)})`)
+        }
         
         // get dimensions
         const CW = W / COLS;
@@ -193,7 +201,6 @@
         const SMALL = R * SMALL_FRAC;
 
         // insert all clock borders
-        const wrapper = document.getElementById('cvs-wrapper');
         wrapper.style.setProperty('--clock-diameter', (2*R)+'px');
         for (let i = 0; i < ROWS; i++) {
             for (let j = 0; j < COLS; j++) {
