@@ -130,6 +130,7 @@
             place-items: center;
             overflow-x: hidden;
             font-family: Georgia, serif;
+            background-color: #111;
         }
         h1 {
             display: none; /* headline would only distract */
@@ -150,10 +151,7 @@
             width: var(--clock-diameter);
             height: var(--clock-diameter);
             border-radius: 50%;
-            box-shadow: inset 3px 3px 3px 3px rgba(0,0,0,0.05),
-                inset -4px -4px 2px 2px rgba(255, 255, 255, 0.3),
-                -2px -2px 3px 3px rgba(255, 255, 255, 0.3),
-                2px 2px 3px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 0 15px rgba(255,255,255,0.05)
         }
     </style>
 </head>
@@ -609,10 +607,10 @@
             const ctx = cvs.getContext('2d');
 
             // ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = '#f0fdff';
+            ctx.fillStyle = '#111';
             ctx.fillRect(0, 0, W+2*PADDING, H+2*PADDING);
 
-            ctx.strokeStyle = 'rgb(0, 0, 0)';
+            ctx.strokeStyle = '#fff';
             ctx.save();
             ctx.translate(PADDING, PADDING);
 
